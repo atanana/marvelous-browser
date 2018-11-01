@@ -1,5 +1,6 @@
 package atanana.com.marvelousbrowser
 
+import atanana.com.marvelousbrowser.web.MarvelAuthInterceptor
 import okhttp3.OkHttpClient
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
@@ -25,4 +26,5 @@ private fun buildOkHttpClient(): OkHttpClient =
         .connectTimeout(TIMEOUT, TimeUnit.SECONDS)
         .readTimeout(TIMEOUT, TimeUnit.SECONDS)
         .writeTimeout(TIMEOUT, TimeUnit.SECONDS)
+        .addInterceptor(MarvelAuthInterceptor())
         .build()
