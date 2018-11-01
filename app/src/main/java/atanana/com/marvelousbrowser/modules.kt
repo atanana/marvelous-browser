@@ -1,6 +1,7 @@
 package atanana.com.marvelousbrowser
 
 import atanana.com.marvelousbrowser.web.MarvelAuthInterceptor
+import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import org.koin.dsl.module.module
 import retrofit2.Retrofit
@@ -16,6 +17,7 @@ private fun buildRetrofit(): Retrofit {
         .baseUrl("https://gateway.marvel.com:443/v1/public")
         .client(buildOkHttpClient())
         .addConverterFactory(MoshiConverterFactory.create())
+        .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 }
 
