@@ -25,10 +25,12 @@ class CharactersPresenter(
         }
 
     init {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch {
             val response = marvelService.characters().await()
             val newCharacters = moshi.parseResult<Character>(response.data.resultsString)
-            characters = newCharacters
+            GlobalScope.launch(Dispatchers.Main) {
+                characters = newCharacters
+            }
         }
     }
 }
