@@ -8,9 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
-import atanana.com.marvelousbrowser.screens.characters.dummy.DummyContent
+import atanana.com.marvelousbrowser.data.Character
+import org.koin.android.ext.android.inject
 
-class CharactersFragment : Fragment() {
+class CharactersFragment : Fragment(), CharactersView {
+    private val charactersPresenter: CharactersPresenter by inject()
+
+    private lateinit var charactersAdapter: CharactersAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,10 +26,17 @@ class CharactersFragment : Fragment() {
         if (view is RecyclerView) {
             with(view) {
                 layoutManager = LinearLayoutManager(context)
-                adapter = CharactersAdapter(DummyContent.ITEMS)
+
+                charactersAdapter = CharactersAdapter()
+                adapter = charactersAdapter
             }
+            charactersPresenter.charactersView = this
         }
         return view
+    }
+
+    override fun setCharacters(characters: List<Character>) {
+        charactersAdapter.characters = characters
     }
 
     companion object {

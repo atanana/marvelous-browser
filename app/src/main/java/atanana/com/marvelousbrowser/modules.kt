@@ -1,5 +1,6 @@
 package atanana.com.marvelousbrowser
 
+import atanana.com.marvelousbrowser.screens.characters.CharactersPresenter
 import atanana.com.marvelousbrowser.web.MarvelAuthInterceptor
 import atanana.com.marvelousbrowser.web.MarvelService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
@@ -15,6 +16,8 @@ val mainModule = module {
     single { buildRetrofit() }
     single { get<Retrofit>().create(MarvelService::class.java) }
     single { buildMoshi() }
+
+    single { CharactersPresenter(get(), get()) }
 }
 
 private fun buildRetrofit(): Retrofit {

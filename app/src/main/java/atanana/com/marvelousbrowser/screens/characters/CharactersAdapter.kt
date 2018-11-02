@@ -1,26 +1,26 @@
 package atanana.com.marvelousbrowser.screens.characters
 
+
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import atanana.com.marvelousbrowser.R
-
-
-import atanana.com.marvelousbrowser.screens.characters.dummy.DummyContent.DummyItem
-
+import atanana.com.marvelousbrowser.data.Character
 import kotlinx.android.synthetic.main.item_character.view.*
 
-class CharactersAdapter(
-    private val mValues: List<DummyItem>
-) : RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
+class CharactersAdapter : RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
+    var characters: List<Character> = emptyList()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     private val mOnClickListener: View.OnClickListener
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as DummyItem
+            val item = v.tag as Character
         }
     }
 
@@ -31,24 +31,23 @@ class CharactersAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = mValues[position]
-        holder.mIdView.text = item.id
-        holder.mContentView.text = item.content
+        val character = characters[position]
+        holder.bind(character)
 
-        with(holder.mView) {
-            tag = item
+        with(holder.view) {
+            tag = character
             setOnClickListener(mOnClickListener)
         }
     }
 
-    override fun getItemCount(): Int = mValues.size
+    override fun getItemCount(): Int = characters.size
 
-    inner class ViewHolder(val mView: View) : RecyclerView.ViewHolder(mView) {
-        val mIdView: TextView = mView.item_number
-        val mContentView: TextView = mView.content
+    inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        private val image = view.character_image
+        private val name = view.character_name
 
-        override fun toString(): String {
-            return super.toString() + " '" + mContentView.text + "'"
+        fun bind(character: Character) {
+            name.text = character.name
         }
     }
 }
