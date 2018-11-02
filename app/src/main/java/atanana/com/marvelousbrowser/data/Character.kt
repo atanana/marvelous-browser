@@ -4,11 +4,11 @@ import com.squareup.moshi.Json
 
 data class Character(
     @Json(name = "comics")
-    val comics: Comics,
+    val comics: MarvelCollection,
     @Json(name = "description")
     val description: String,
     @Json(name = "events")
-    val events: Events,
+    val events: MarvelCollection,
     @Json(name = "id")
     val id: Int,
     @Json(name = "modified")
@@ -18,9 +18,9 @@ data class Character(
     @Json(name = "resourceURI")
     val resourceURI: String,
     @Json(name = "series")
-    val series: Series,
+    val series: MarvelCollection,
     @Json(name = "stories")
-    val stories: Stories,
+    val stories: MarvelCollection,
     @Json(name = "thumbnail")
     val thumbnail: Thumbnail,
     @Json(name = "urls")

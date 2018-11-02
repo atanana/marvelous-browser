@@ -2,7 +2,7 @@ package atanana.com.marvelousbrowser.data
 
 import com.squareup.moshi.Json
 
-data class Stories(
+data class MarvelCollection(
     @Json(name = "available")
     val available: Int,
     @Json(name = "collectionURI")
