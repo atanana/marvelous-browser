@@ -1,6 +1,7 @@
 package atanana.com.marvelousbrowser
 
 import atanana.com.marvelousbrowser.web.MarvelAuthInterceptor
+import atanana.com.marvelousbrowser.web.MarvelService
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient
 import org.koin.dsl.module.module
@@ -10,6 +11,7 @@ import java.util.concurrent.TimeUnit
 
 val mainModule = module {
     single { buildRetrofit() }
+    single { get<Retrofit>().create(MarvelService::class.java) }
 }
 
 private fun buildRetrofit(): Retrofit {
