@@ -14,7 +14,7 @@ val mainModule = module {
 
 private fun buildRetrofit(): Retrofit {
     return Retrofit.Builder()
-        .baseUrl("https://gateway.marvel.com:443/v1/public")
+        .baseUrl("https://gateway.marvel.com:443/v1/public/")
         .client(buildOkHttpClient())
         .addConverterFactory(MoshiConverterFactory.create())
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
