@@ -7,6 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
 import atanana.com.marvelousbrowser.data.Character
+import atanana.com.marvelousbrowser.utils.GlideApp
+import atanana.com.marvelousbrowser.utils.digestUrl
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions.withCrossFade
+import com.bumptech.glide.signature.ObjectKey
 import kotlinx.android.synthetic.main.item_character.view.*
 
 class CharactersAdapter : RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
@@ -48,6 +53,18 @@ class CharactersAdapter : RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
 
         fun bind(character: Character) {
             name.text = character.name
+            loadImage(character)
+        }
+
+        private fun loadImage(character: Character) {
+            val url = character.thumbnail.fullPath
+            GlideApp.with(view)
+                .load(digestUrl(url))
+                .placeholder(R.drawable.ic_launcher_background)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .transition(withCrossFade())
+                .signature(ObjectKey(url))
+                .into(image)
         }
     }
 }

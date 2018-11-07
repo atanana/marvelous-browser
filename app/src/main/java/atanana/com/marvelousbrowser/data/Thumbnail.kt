@@ -7,4 +7,7 @@ data class Thumbnail(
     val extension: String,
     @Json(name = "path")
     val path: String
-)
+) {
+    val fullPath: String
+        get() = "$path.$extension"
+}
