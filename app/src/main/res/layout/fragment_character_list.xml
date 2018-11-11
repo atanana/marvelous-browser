@@ -12,6 +12,8 @@
         android:name="atanana.com.marvelousbrowser.screens.characters.CharacterFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/default_margin"
         android:visibility="gone"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/item_character" />
