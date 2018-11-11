@@ -1,5 +1,6 @@
 package atanana.com.marvelousbrowser
 
+import atanana.com.marvelousbrowser.screens.characters.CharactersDataSource
 import atanana.com.marvelousbrowser.screens.characters.CharactersPresenter
 import atanana.com.marvelousbrowser.web.MarvelAuthInterceptor
 import atanana.com.marvelousbrowser.web.MarvelService
@@ -18,6 +19,7 @@ val mainModule = module {
     single { buildMoshi() }
 
     single { CharactersPresenter(get(), get()) }
+    single { CharactersDataSource(get(), get()) }
 }
 
 private fun buildRetrofit(): Retrofit {

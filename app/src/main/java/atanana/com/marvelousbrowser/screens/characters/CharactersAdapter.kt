@@ -1,6 +1,8 @@
 package atanana.com.marvelousbrowser.screens.characters
 
 
+import android.arch.paging.PagedListAdapter
+import android.support.v7.util.DiffUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -10,7 +12,7 @@ import atanana.com.marvelousbrowser.data.Character
 import atanana.com.marvelousbrowser.utils.load
 import kotlinx.android.synthetic.main.item_character.view.*
 
-class CharactersAdapter : RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
+class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHolder>(DIFF_CALLBACK) {
     var characters: List<Character> = emptyList()
         set(value) {
             field = value
@@ -55,6 +57,14 @@ class CharactersAdapter : RecyclerView.Adapter<CharactersAdapter.ViewHolder>() {
         private fun loadImage(character: Character) {
             val url = character.thumbnail.fullPath
             image.load(url)
+        }
+    }
+
+    companion object {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Character>() {
+            override fun areItemsTheSame(p0: Character, p1: Character): Boolean = p0.id == p1.id
+
+            override fun areContentsTheSame(p0: Character, p1: Character): Boolean = p0 == p1
         }
     }
 }
