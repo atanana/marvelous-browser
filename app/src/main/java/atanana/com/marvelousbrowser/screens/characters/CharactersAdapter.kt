@@ -13,12 +13,6 @@ import atanana.com.marvelousbrowser.utils.load
 import kotlinx.android.synthetic.main.item_character.view.*
 
 class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHolder>(DIFF_CALLBACK) {
-    var characters: List<Character> = emptyList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
-
     private val mOnClickListener: View.OnClickListener
 
     init {
@@ -34,16 +28,18 @@ class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHold
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val character = characters[position]
-        holder.bind(character)
+        val character = getItem(position)
+        if (character != null) {
+            holder.bind(character)
 
-        with(holder.view) {
-            tag = character
-            setOnClickListener(mOnClickListener)
+            with(holder.view) {
+                tag = character
+                setOnClickListener(mOnClickListener)
+            }
+        } else {
+            holder.clear()
         }
     }
-
-    override fun getItemCount(): Int = characters.size
 
     inner class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         private val image = view.character_image
@@ -57,6 +53,11 @@ class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHold
         private fun loadImage(character: Character) {
             val url = character.thumbnail.fullPath
             image.load(url)
+        }
+
+        fun clear() {
+            name.text = ""
+            image.setImageResource(R.drawable.placeholder)
         }
     }
 

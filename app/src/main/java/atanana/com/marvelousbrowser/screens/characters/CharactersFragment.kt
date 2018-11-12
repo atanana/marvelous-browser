@@ -1,5 +1,6 @@
 package atanana.com.marvelousbrowser.screens.characters
 
+import android.arch.paging.PagedList
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
@@ -29,12 +30,10 @@ class CharactersFragment : Fragment(), CharactersView {
         charactersPresenter.charactersView = this
     }
 
-    override fun setCharacters(characters: List<Character>) {
-        charactersAdapter.characters = characters
-        if (characters.isNotEmpty()) {
-            list.visibility = View.VISIBLE
-            progressbar.visibility = View.GONE
-        }
+    override fun setCharacters(characters: PagedList<Character>) {
+        charactersAdapter.submitList(characters)
+        list.visibility = View.VISIBLE
+        progressbar.visibility = View.GONE
     }
 
     companion object {
