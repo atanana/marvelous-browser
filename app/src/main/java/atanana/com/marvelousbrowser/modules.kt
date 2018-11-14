@@ -1,5 +1,8 @@
 package atanana.com.marvelousbrowser
 
+import android.arch.persistence.room.Room
+import android.content.Context
+import atanana.com.marvelousbrowser.data.room.MarvelousDatabase
 import atanana.com.marvelousbrowser.screens.characters.CharactersDataSource
 import atanana.com.marvelousbrowser.screens.characters.CharactersDataSourceFactory
 import atanana.com.marvelousbrowser.screens.characters.CharactersPresenter
@@ -18,6 +21,7 @@ val mainModule = module {
     single { buildRetrofit() }
     single { get<Retrofit>().create(MarvelService::class.java) }
     single { buildMoshi() }
+    single { buildDatabase(get()) }
 
     single { CharactersPresenter(get()) }
     single { CharactersDataSource(get(), get()) }
@@ -48,3 +52,6 @@ private fun buildMoshi(): Moshi {
         .add(KotlinJsonAdapterFactory())
         .build()
 }
+
+private fun buildDatabase(context: Context): MarvelousDatabase =
+    Room.databaseBuilder(context, MarvelousDatabase::class.java, "marvelous-db").build()
