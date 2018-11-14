@@ -1,14 +1,14 @@
-package atanana.com.marvelousbrowser.data
+package atanana.com.marvelousbrowser.data.web
 
 import com.squareup.moshi.Json
 
-data class Character(
+data class CharacterResponse(
     @Json(name = "comics")
-    val comics: MarvelCollection,
+    val comics: CollectionResponse,
     @Json(name = "description")
     val description: String,
     @Json(name = "events")
-    val events: MarvelCollection,
+    val events: CollectionResponse,
     @Json(name = "id")
     val id: Int,
     @Json(name = "modified")
@@ -18,11 +18,11 @@ data class Character(
     @Json(name = "resourceURI")
     val resourceURI: String,
     @Json(name = "series")
-    val series: MarvelCollection,
+    val series: CollectionResponse,
     @Json(name = "stories")
-    val stories: MarvelCollection,
+    val stories: CollectionResponse,
     @Json(name = "thumbnail")
-    val thumbnail: Thumbnail,
+    val thumbnail: ThumbnailResponse,
     @Json(name = "urls")
-    val urls: List<Url>
+    val urls: List<UrlResponse>
 )

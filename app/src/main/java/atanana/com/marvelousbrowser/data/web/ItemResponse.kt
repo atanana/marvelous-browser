@@ -1,8 +1,8 @@
-package atanana.com.marvelousbrowser.data
+package atanana.com.marvelousbrowser.data.web
 
 import com.squareup.moshi.Json
 
-data class Item(
+data class ItemResponse(
     @Json(name = "name")
     val name: String,
     @Json(name = "resourceURI")

@@ -3,7 +3,7 @@ package atanana.com.marvelousbrowser.screens.characters
 import android.arch.lifecycle.Observer
 import android.arch.paging.LivePagedListBuilder
 import android.arch.paging.PagedList
-import atanana.com.marvelousbrowser.data.Character
+import atanana.com.marvelousbrowser.data.web.CharacterResponse
 
 class CharactersPresenter(private val dataSourceFactory: CharactersDataSourceFactory) {
     private val pageConfig = PagedList.Config.Builder()
@@ -11,7 +11,7 @@ class CharactersPresenter(private val dataSourceFactory: CharactersDataSourceFac
         .setEnablePlaceholders(true)
         .build()
 
-    private val charactersData = LivePagedListBuilder<Int, Character>(dataSourceFactory, pageConfig).build()
+    private val charactersData = LivePagedListBuilder<Int, CharacterResponse>(dataSourceFactory, pageConfig).build()
 
     var charactersView: CharactersView? = null
         set(value) {

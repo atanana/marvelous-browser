@@ -8,7 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
-import atanana.com.marvelousbrowser.data.Character
+import atanana.com.marvelousbrowser.data.web.CharacterResponse
 import kotlinx.android.synthetic.main.fragment_character_list.*
 import org.koin.android.ext.android.inject
 
@@ -30,7 +30,7 @@ class CharactersFragment : Fragment(), CharactersView {
         charactersPresenter.charactersView = this
     }
 
-    override fun setCharacters(characters: PagedList<Character>) {
+    override fun setCharacters(characters: PagedList<CharacterResponse>) {
         charactersAdapter.submitList(characters)
         list.visibility = View.VISIBLE
         progressbar.visibility = View.GONE

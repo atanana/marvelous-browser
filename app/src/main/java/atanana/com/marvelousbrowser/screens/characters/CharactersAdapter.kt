@@ -8,16 +8,16 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
-import atanana.com.marvelousbrowser.data.Character
+import atanana.com.marvelousbrowser.data.web.CharacterResponse
 import atanana.com.marvelousbrowser.utils.load
 import kotlinx.android.synthetic.main.item_character.view.*
 
-class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHolder>(DIFF_CALLBACK) {
+class CharactersAdapter : PagedListAdapter<CharacterResponse, CharactersAdapter.ViewHolder>(DIFF_CALLBACK) {
     private val mOnClickListener: View.OnClickListener
 
     init {
         mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as Character
+            val item = v.tag as CharacterResponse
         }
     }
 
@@ -45,12 +45,12 @@ class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHold
         private val image = view.character_image
         private val name = view.character_name
 
-        fun bind(character: Character) {
+        fun bind(character: CharacterResponse) {
             name.text = character.name
             loadImage(character)
         }
 
-        private fun loadImage(character: Character) {
+        private fun loadImage(character: CharacterResponse) {
             val url = character.thumbnail.fullPath
             image.load(url)
         }
@@ -62,10 +62,10 @@ class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHold
     }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<Character>() {
-            override fun areItemsTheSame(p0: Character, p1: Character): Boolean = p0.id == p1.id
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CharacterResponse>() {
+            override fun areItemsTheSame(p0: CharacterResponse, p1: CharacterResponse): Boolean = p0.id == p1.id
 
-            override fun areContentsTheSame(p0: Character, p1: Character): Boolean = p0 == p1
+            override fun areContentsTheSame(p0: CharacterResponse, p1: CharacterResponse): Boolean = p0 == p1
         }
     }
 }

@@ -1,9 +1,9 @@
-package atanana.com.marvelousbrowser.data
+package atanana.com.marvelousbrowser.data.web
 
 import com.squareup.moshi.Json
 import org.json.JSONArray
 
-data class Data(
+data class DataResponse(
     @Json(name = "count")
     val count: Int,
     @Json(name = "limit")

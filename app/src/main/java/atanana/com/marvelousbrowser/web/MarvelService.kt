@@ -1,6 +1,6 @@
 package atanana.com.marvelousbrowser.web
 
-import atanana.com.marvelousbrowser.data.MarvelResponse
+import atanana.com.marvelousbrowser.data.web.MarvelResponse
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET
 import retrofit2.http.Query

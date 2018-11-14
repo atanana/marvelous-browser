@@ -1,8 +1,8 @@
-package atanana.com.marvelousbrowser.data
+package atanana.com.marvelousbrowser.data.web
 
 import com.squareup.moshi.Json
 
-data class Thumbnail(
+data class ThumbnailResponse(
     @Json(name = "extension")
     val extension: String,
     @Json(name = "path")

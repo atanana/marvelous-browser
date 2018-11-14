@@ -1,4 +1,4 @@
-package atanana.com.marvelousbrowser.data
+package atanana.com.marvelousbrowser.data.web
 
 import com.squareup.moshi.Json
 
@@ -12,7 +12,7 @@ data class MarvelResponse(
     @Json(name = "copyright")
     val copyright: String,
     @Json(name = "data")
-    val `data`: Data,
+    val `data`: DataResponse,
     @Json(name = "etag")
     val etag: String,
     @Json(name = "status")
