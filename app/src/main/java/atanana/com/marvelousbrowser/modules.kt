@@ -4,7 +4,6 @@ import android.arch.persistence.room.Room
 import android.content.Context
 import atanana.com.marvelousbrowser.data.room.MarvelousDatabase
 import atanana.com.marvelousbrowser.screens.characters.CharactersDataSource
-import atanana.com.marvelousbrowser.screens.characters.CharactersDataSourceFactory
 import atanana.com.marvelousbrowser.screens.characters.CharactersPresenter
 import atanana.com.marvelousbrowser.web.MarvelAuthInterceptor
 import atanana.com.marvelousbrowser.web.MarvelService
@@ -25,7 +24,6 @@ val mainModule = module {
 
     single { CharactersPresenter(get()) }
     single { CharactersDataSource(get(), get()) }
-    single { CharactersDataSourceFactory(get()) }
 }
 
 private fun buildRetrofit(): Retrofit {

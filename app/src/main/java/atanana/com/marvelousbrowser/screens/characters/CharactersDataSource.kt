@@ -32,8 +32,3 @@ class CharactersDataSource(
         }
     }
 }
-
-class CharactersDataSourceFactory(private val dataSource: CharactersDataSource) :
-    DataSource.Factory<Int, CharacterResponse>() {
-    override fun create(): DataSource<Int, CharacterResponse> = dataSource
-}
