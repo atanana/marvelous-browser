@@ -2,10 +2,7 @@ package atanana.com.marvelousbrowser.screens.characters
 
 import android.arch.paging.PagedList
 import atanana.com.marvelousbrowser.data.web.CharacterResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import java.util.concurrent.Executors
+import atanana.com.marvelousbrowser.utils.MarvelousExecutors
 
 class CharactersPresenter(private val charactersDataSource: CharactersDataSource) {
     private val pageConfig = PagedList.Config.Builder()
@@ -15,10 +12,8 @@ class CharactersPresenter(private val charactersDataSource: CharactersDataSource
 
     private val pagedList by lazy {
         PagedList.Builder<Int, CharacterResponse>(charactersDataSource, pageConfig)
-            .setNotifyExecutor {
-                GlobalScope.launch(Dispatchers.Main) { it.run() }
-            }
-            .setFetchExecutor(Executors.newFixedThreadPool(2))
+            .setNotifyExecutor(MarvelousExecutors.ui)
+            .setFetchExecutor(MarvelousExecutors.io)
             .build()
     }
 
