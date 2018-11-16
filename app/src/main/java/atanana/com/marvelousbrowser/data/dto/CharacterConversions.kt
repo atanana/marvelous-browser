@@ -12,6 +12,15 @@ fun CharacterResponse.toCharacter(): Character =
 
 fun List<CharacterResponse>.toCharacters(): List<Character> = map(CharacterResponse::toCharacter)
 
+fun CharacterEntity.toCharacter(): Character =
+    Character(
+        id = id,
+        name = name,
+        thumbnailUrl = thumbnailUrl
+    )
+
+fun List<CharacterEntity>.toCharacters2(): List<Character> = map(CharacterEntity::toCharacter)
+
 fun Character.toEntity(): CharacterEntity =
     CharacterEntity(
         id = id,

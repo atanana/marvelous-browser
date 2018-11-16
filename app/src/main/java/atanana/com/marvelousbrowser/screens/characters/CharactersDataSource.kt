@@ -3,6 +3,7 @@ package atanana.com.marvelousbrowser.screens.characters
 import android.arch.paging.PositionalDataSource
 import atanana.com.marvelousbrowser.data.dto.Character
 import atanana.com.marvelousbrowser.data.dto.toCharacters
+import atanana.com.marvelousbrowser.data.dto.toCharacters2
 import atanana.com.marvelousbrowser.data.dto.toEntities
 import atanana.com.marvelousbrowser.data.room.MarvelousDatabase
 import atanana.com.marvelousbrowser.data.web.CharacterResponse
@@ -17,12 +18,14 @@ import kotlin.math.min
 class CharactersDataSource(
     private val marvelService: MarvelService,
     private val moshi: Moshi,
-    private val database: MarvelousDatabase
+    database: MarvelousDatabase
 ) : PositionalDataSource<Character>() {
+    private val charactersDao = database.charactersDao()
+
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Character>) {
         GlobalScope.launch(Dispatchers.IO) {
             val limit = min(params.loadSize, MarvelService.MAX_LIMIT)
-            val characters = loadCharactersFromWeb(params.startPosition, limit)
+            val characters = loadCharacters(params.startPosition, limit)
             callback.onResult(characters)
         }
     }
@@ -31,8 +34,17 @@ class CharactersDataSource(
         GlobalScope.launch(Dispatchers.IO) {
             val limit = min(params.requestedLoadSize, MarvelService.MAX_LIMIT)
             val startPosition = params.requestedStartPosition
-            val characters = loadCharactersFromWeb(startPosition, limit)
+            val characters = loadCharacters(startPosition, limit)
             callback.onResult(characters, startPosition)
+        }
+    }
+
+    private suspend fun loadCharacters(offset: Int, limit: Int): List<Character> {
+        val characters = charactersDao.query(limit, offset)
+        return if (characters.isNotEmpty()) {
+            characters.toCharacters2()
+        } else {
+            loadCharactersFromWeb(offset, limit)
         }
     }
 
@@ -46,7 +58,7 @@ class CharactersDataSource(
 
     private fun storeCharacters(characters: List<Character>) {
         GlobalScope.launch(Dispatchers.IO) {
-            database.charactersDao().insertOrUpdate(characters.toEntities())
+            charactersDao.insertOrUpdate(characters.toEntities())
         }
     }
 }
