@@ -7,7 +7,7 @@ import atanana.com.marvelousbrowser.utils.MarvelousExecutors
 class CharactersPresenter(private val charactersDataSource: CharactersDataSource) {
     private val pageConfig = PagedList.Config.Builder()
         .setPageSize(20)
-        .setEnablePlaceholders(true)
+        .setEnablePlaceholders(false)
         .build()
 
     private val pagedList by lazy {

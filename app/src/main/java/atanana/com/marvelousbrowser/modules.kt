@@ -23,7 +23,7 @@ val mainModule = module {
     single { buildDatabase(get()) }
 
     single { CharactersPresenter(get()) }
-    single { CharactersDataSource(get(), get()) }
+    single { CharactersDataSource(get(), get(), get()) }
 }
 
 private fun buildRetrofit(): Retrofit {
