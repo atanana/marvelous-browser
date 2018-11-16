@@ -12,7 +12,6 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlin.math.min
 
 class CharactersDataSource(
@@ -21,7 +20,7 @@ class CharactersDataSource(
     private val database: MarvelousDatabase
 ) : PositionalDataSource<Character>() {
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Character>) {
-        runBlocking {
+        GlobalScope.launch(Dispatchers.IO) {
             val limit = min(params.loadSize, MarvelService.MAX_LIMIT)
             val characters = loadCharactersFromWeb(params.startPosition, limit)
             callback.onResult(characters)
@@ -29,7 +28,7 @@ class CharactersDataSource(
     }
 
     override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Character>) {
-        runBlocking {
+        GlobalScope.launch(Dispatchers.IO) {
             val limit = min(params.requestedLoadSize, MarvelService.MAX_LIMIT)
             val startPosition = params.requestedStartPosition
             val characters = loadCharactersFromWeb(startPosition, limit)
