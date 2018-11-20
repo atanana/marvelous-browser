@@ -12,6 +12,8 @@ import atanana.com.marvelousbrowser.web.MarvelService
 import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
@@ -21,6 +23,9 @@ class CharactersDataSource(
     database: MarvelousDatabase
 ) : PositionalDataSource<Character>() {
     private val charactersDao = database.charactersDao()
+    private val loadingStateChannel: Channel<Boolean> = Channel()
+
+    val loadingState: ReceiveChannel<Boolean> = loadingStateChannel
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Character>) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -40,12 +45,15 @@ class CharactersDataSource(
     }
 
     private suspend fun loadCharacters(offset: Int, limit: Int): List<Character> {
-        val characters = charactersDao.query(limit, offset)
-        return if (characters.isNotEmpty()) {
-            characters.toCharacters2()
+        loadingStateChannel.send(true)
+        val dbResult = charactersDao.query(limit, offset)
+        val characters = if (dbResult.isNotEmpty()) {
+            dbResult.toCharacters2()
         } else {
             loadCharactersFromWeb(offset, limit)
         }
+        loadingStateChannel.send(false)
+        return characters
     }
 
     private suspend fun loadCharactersFromWeb(offset: Int, limit: Int): List<Character> {

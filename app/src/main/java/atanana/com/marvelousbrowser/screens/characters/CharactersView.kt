@@ -6,4 +6,6 @@ import atanana.com.marvelousbrowser.data.dto.Character
 
 interface CharactersView : LifecycleOwner {
     fun setCharacters(characters: PagedList<Character>)
+
+    fun setLoading(isLoading: Boolean)
 }

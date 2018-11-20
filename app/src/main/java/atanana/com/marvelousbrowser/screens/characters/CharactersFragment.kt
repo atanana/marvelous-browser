@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
 import atanana.com.marvelousbrowser.data.dto.Character
+import atanana.com.marvelousbrowser.utils.setVisible
 import kotlinx.android.synthetic.main.fragment_character_list.*
 import org.koin.android.ext.android.inject
 
@@ -32,8 +33,11 @@ class CharactersFragment : Fragment(), CharactersView {
 
     override fun setCharacters(characters: PagedList<Character>) {
         charactersAdapter.submitList(characters)
-        list.visibility = View.VISIBLE
-        progressbar.visibility = View.GONE
+    }
+
+    override fun setLoading(isLoading: Boolean) {
+        list.setVisible(!isLoading)
+        progressbar.setVisible(isLoading)
     }
 
     companion object {
