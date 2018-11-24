@@ -1,6 +1,7 @@
 package atanana.com.marvelousbrowser.screens.characters
 
 import android.arch.paging.PositionalDataSource
+import atanana.com.marvelousbrowser.data.MarvelousPreferences
 import atanana.com.marvelousbrowser.data.dto.Character
 import atanana.com.marvelousbrowser.data.dto.toCharacters
 import atanana.com.marvelousbrowser.data.dto.toCharacters2
@@ -13,25 +14,29 @@ import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.Channel.Factory.CONFLATED
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.launch
 import kotlin.math.min
 
+private typealias LoadResult = Pair<List<Character>, Int>
+
 class CharactersDataSource(
     private val marvelService: MarvelService,
     private val moshi: Moshi,
-    database: MarvelousDatabase
+    database: MarvelousDatabase,
+    private val preferences: MarvelousPreferences
 ) : PositionalDataSource<Character>() {
     private val charactersDao = database.charactersDao()
-    private val loadingStateChannel: Channel<Boolean> = Channel()
+    private val loadingStateChannel: Channel<Boolean> = Channel(CONFLATED)
 
     val loadingState: ReceiveChannel<Boolean> = loadingStateChannel
 
     override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Character>) {
         GlobalScope.launch(Dispatchers.IO) {
             val limit = min(params.loadSize, MarvelService.MAX_LIMIT)
-            val characters = loadCharacters(params.startPosition, limit)
-            callback.onResult(characters)
+            val loadResult = loadCharacters(params.startPosition, limit)
+            callback.onResult(loadResult.first)
         }
     }
 
@@ -39,34 +44,41 @@ class CharactersDataSource(
         GlobalScope.launch(Dispatchers.IO) {
             val limit = min(params.requestedLoadSize, MarvelService.MAX_LIMIT)
             val startPosition = params.requestedStartPosition
-            val characters = loadCharacters(startPosition, limit)
-            callback.onResult(characters, startPosition)
+            notifyLoading {
+                val loadResult = loadCharacters(startPosition, limit)
+                callback.onResult(loadResult.first, startPosition, loadResult.second)
+            }
         }
     }
 
-    private suspend fun loadCharacters(offset: Int, limit: Int): List<Character> {
+    private suspend inline fun notifyLoading(block: () -> Unit) {
         loadingStateChannel.send(true)
+        block()
+        loadingStateChannel.send(false)
+    }
+
+    private suspend fun loadCharacters(offset: Int, limit: Int): LoadResult {
         val dbResult = charactersDao.query(limit, offset)
-        val characters = if (dbResult.isNotEmpty()) {
-            dbResult.toCharacters2()
+        return if (dbResult.isNotEmpty()) {
+            Pair(dbResult.toCharacters2(), preferences.totalCharacters)
         } else {
             loadCharactersFromWeb(offset, limit)
         }
-        loadingStateChannel.send(false)
-        return characters
     }
 
-    private suspend fun loadCharactersFromWeb(offset: Int, limit: Int): List<Character> {
+    private suspend fun loadCharactersFromWeb(offset: Int, limit: Int): LoadResult {
         val response = marvelService.characters(offset = offset, limit = limit).await()
         val charactersResponse = moshi.parseResult<CharacterResponse>(response.data.resultsString)
         val characters = charactersResponse.toCharacters()
-        storeCharacters(characters)
-        return characters
+        val result = Pair(characters, response.data.total)
+        storeResult(result)
+        return result
     }
 
-    private fun storeCharacters(characters: List<Character>) {
+    private fun storeResult(loadResult: LoadResult) {
         GlobalScope.launch(Dispatchers.IO) {
-            charactersDao.insertOrUpdate(characters.toEntities())
+            charactersDao.insertOrUpdate(loadResult.first.toEntities())
+            preferences.totalCharacters = loadResult.second
         }
     }
 }

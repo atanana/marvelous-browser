@@ -27,7 +27,7 @@ val mainModule = module {
     single { MarvelousPreferences(get()) }
 
     scope(SCOPE_FRAGMENT) { CharactersPresenter(get()) }
-    scope(SCOPE_FRAGMENT) { CharactersDataSource(get(), get(), get()) }
+    scope(SCOPE_FRAGMENT) { CharactersDataSource(get(), get(), get(), get()) }
 }
 
 private fun buildRetrofit(): Retrofit {
