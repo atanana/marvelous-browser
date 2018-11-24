@@ -2,8 +2,10 @@ package atanana.com.marvelousbrowser
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.support.v4.app.FragmentManager
 import atanana.com.marvelousbrowser.data.MarvelousPreferences
 import atanana.com.marvelousbrowser.data.room.MarvelousDatabase
+import atanana.com.marvelousbrowser.screens.MarvelousRouter
 import atanana.com.marvelousbrowser.screens.characters.CharactersDataSource
 import atanana.com.marvelousbrowser.screens.characters.CharactersPresenter
 import atanana.com.marvelousbrowser.web.MarvelAuthInterceptor
@@ -25,8 +27,9 @@ val mainModule = module {
     single { buildMoshi() }
     single { buildDatabase(get()) }
     single { MarvelousPreferences(get()) }
+    factory { (fragmentManager: FragmentManager) -> MarvelousRouter(fragmentManager) }
 
-    scope(SCOPE_FRAGMENT) { CharactersPresenter(get()) }
+    scope(SCOPE_FRAGMENT) { (router: MarvelousRouter) -> CharactersPresenter(get(), router) }
     scope(SCOPE_FRAGMENT) { CharactersDataSource(get(), get(), get(), get()) }
 }
 

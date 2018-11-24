@@ -2,13 +2,14 @@ package atanana.com.marvelousbrowser.screens.characters
 
 import android.arch.paging.PagedList
 import atanana.com.marvelousbrowser.data.dto.Character
+import atanana.com.marvelousbrowser.screens.MarvelousRouter
 import atanana.com.marvelousbrowser.utils.MarvelousExecutors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class CharactersPresenter(private val charactersDataSource: CharactersDataSource) {
+class CharactersPresenter(private val charactersDataSource: CharactersDataSource, private val router: MarvelousRouter) {
     private lateinit var scopeJob: Job
 
     private val pageConfig = PagedList.Config.Builder()
@@ -45,5 +46,6 @@ class CharactersPresenter(private val charactersDataSource: CharactersDataSource
     }
 
     fun onCharacterClick(character: Character) {
+        router.openCharacterDetails(character.id)
     }
 }

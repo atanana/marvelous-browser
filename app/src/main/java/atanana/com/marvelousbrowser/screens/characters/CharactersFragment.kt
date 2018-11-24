@@ -10,14 +10,17 @@ import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
 import atanana.com.marvelousbrowser.SCOPE_FRAGMENT
 import atanana.com.marvelousbrowser.data.dto.Character
+import atanana.com.marvelousbrowser.screens.MarvelousRouter
 import atanana.com.marvelousbrowser.utils.setVisible
 import kotlinx.android.synthetic.main.fragment_character_list.*
 import org.koin.android.ext.android.inject
 import org.koin.android.scope.ext.android.bindScope
 import org.koin.android.scope.ext.android.getOrCreateScope
+import org.koin.core.parameter.parametersOf
 
 class CharactersFragment : Fragment(), CharactersView {
-    private val charactersPresenter: CharactersPresenter by inject()
+    private val router: MarvelousRouter by inject { parametersOf(fragmentManager!!) }
+    private val charactersPresenter: CharactersPresenter by inject { parametersOf(router) }
 
     private lateinit var charactersAdapter: CharactersAdapter
 
