@@ -32,8 +32,6 @@ class CharactersFragment : Fragment(), CharactersView {
         list.layoutManager = LinearLayoutManager(context)
         charactersAdapter = CharactersAdapter()
         list.adapter = charactersAdapter
-
-        charactersPresenter.charactersView = this
     }
 
     override fun setCharacters(characters: PagedList<Character>) {
@@ -43,6 +41,16 @@ class CharactersFragment : Fragment(), CharactersView {
     override fun setLoading(isLoading: Boolean) {
         list.setVisible(!isLoading)
         progressbar.setVisible(isLoading)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        charactersPresenter.charactersView = this
+    }
+
+    override fun onPause() {
+        super.onPause()
+        charactersPresenter.charactersView = null
     }
 
     companion object {
