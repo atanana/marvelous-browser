@@ -16,14 +16,16 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
+const val SCOPE_FRAGMENT = "scope_fragment"
+
 val mainModule = module {
     single { buildRetrofit() }
     single { get<Retrofit>().create(MarvelService::class.java) }
     single { buildMoshi() }
     single { buildDatabase(get()) }
 
-    single { CharactersPresenter(get()) }
-    single { CharactersDataSource(get(), get(), get()) }
+    scope(SCOPE_FRAGMENT) { CharactersPresenter(get()) }
+    scope(SCOPE_FRAGMENT) { CharactersDataSource(get(), get(), get()) }
 }
 
 private fun buildRetrofit(): Retrofit {

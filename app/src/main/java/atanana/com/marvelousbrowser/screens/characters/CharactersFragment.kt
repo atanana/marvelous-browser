@@ -8,10 +8,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
+import atanana.com.marvelousbrowser.SCOPE_FRAGMENT
 import atanana.com.marvelousbrowser.data.dto.Character
 import atanana.com.marvelousbrowser.utils.setVisible
 import kotlinx.android.synthetic.main.fragment_character_list.*
 import org.koin.android.ext.android.inject
+import org.koin.android.scope.ext.android.bindScope
+import org.koin.android.scope.ext.android.getOrCreateScope
 
 class CharactersFragment : Fragment(), CharactersView {
     private val charactersPresenter: CharactersPresenter by inject()
@@ -24,6 +27,8 @@ class CharactersFragment : Fragment(), CharactersView {
     ): View? = inflater.inflate(R.layout.fragment_character_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        bindScope(getOrCreateScope(SCOPE_FRAGMENT))
+
         list.layoutManager = LinearLayoutManager(context)
         charactersAdapter = CharactersAdapter()
         list.adapter = charactersAdapter
