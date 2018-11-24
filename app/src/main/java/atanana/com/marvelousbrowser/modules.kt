@@ -2,6 +2,7 @@ package atanana.com.marvelousbrowser
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import atanana.com.marvelousbrowser.data.MarvelousPreferences
 import atanana.com.marvelousbrowser.data.room.MarvelousDatabase
 import atanana.com.marvelousbrowser.screens.characters.CharactersDataSource
 import atanana.com.marvelousbrowser.screens.characters.CharactersPresenter
@@ -23,6 +24,7 @@ val mainModule = module {
     single { get<Retrofit>().create(MarvelService::class.java) }
     single { buildMoshi() }
     single { buildDatabase(get()) }
+    single { MarvelousPreferences(get()) }
 
     scope(SCOPE_FRAGMENT) { CharactersPresenter(get()) }
     scope(SCOPE_FRAGMENT) { CharactersDataSource(get(), get(), get()) }
