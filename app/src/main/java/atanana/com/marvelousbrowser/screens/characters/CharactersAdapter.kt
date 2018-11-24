@@ -9,16 +9,15 @@ import android.view.View
 import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
 import atanana.com.marvelousbrowser.data.dto.Character
-import atanana.com.marvelousbrowser.data.web.CharacterResponse
 import atanana.com.marvelousbrowser.utils.load
 import kotlinx.android.synthetic.main.item_character.view.*
 
-class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHolder>(DIFF_CALLBACK) {
-    private val mOnClickListener: View.OnClickListener
-
-    init {
-        mOnClickListener = View.OnClickListener { v ->
-            val item = v.tag as CharacterResponse
+class CharactersAdapter(private val onItemClick: (Character) -> Unit) :
+    PagedListAdapter<Character, CharactersAdapter.ViewHolder>(DIFF_CALLBACK) {
+    private val onClickListener = View.OnClickListener {
+        val item = it.tag as? Character
+        if (item != null) {
+            onItemClick(item)
         }
     }
 
@@ -35,7 +34,7 @@ class CharactersAdapter : PagedListAdapter<Character, CharactersAdapter.ViewHold
 
             with(holder.view) {
                 tag = character
-                setOnClickListener(mOnClickListener)
+                setOnClickListener(onClickListener)
             }
         } else {
             holder.clear()

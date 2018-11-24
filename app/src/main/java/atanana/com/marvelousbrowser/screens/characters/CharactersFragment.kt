@@ -30,7 +30,7 @@ class CharactersFragment : Fragment(), CharactersView {
         bindScope(getOrCreateScope(SCOPE_FRAGMENT))
 
         list.layoutManager = LinearLayoutManager(context)
-        charactersAdapter = CharactersAdapter()
+        charactersAdapter = CharactersAdapter { charactersPresenter.onCharacterClick(it) }
         list.adapter = charactersAdapter
     }
 

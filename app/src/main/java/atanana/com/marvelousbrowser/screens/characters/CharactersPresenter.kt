@@ -43,4 +43,7 @@ class CharactersPresenter(private val charactersDataSource: CharactersDataSource
             }
         }
     }
+
+    fun onCharacterClick(character: Character) {
+    }
 }
