@@ -8,13 +8,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import atanana.com.marvelousbrowser.R
+import atanana.com.marvelousbrowser.SCOPE_FRAGMENT
 import atanana.com.marvelousbrowser.data.dto.Character
+import atanana.com.marvelousbrowser.screens.MarvelousRouter
 import atanana.com.marvelousbrowser.utils.setVisible
 import kotlinx.android.synthetic.main.fragment_character_list.*
 import org.koin.android.ext.android.inject
+import org.koin.android.scope.ext.android.bindScope
+import org.koin.android.scope.ext.android.getOrCreateScope
+import org.koin.core.parameter.parametersOf
 
 class CharactersFragment : Fragment(), CharactersView {
-    private val charactersPresenter: CharactersPresenter by inject()
+    private val router: MarvelousRouter by inject { parametersOf(fragmentManager!!) }
+    private val charactersPresenter: CharactersPresenter by inject { parametersOf(router) }
 
     private lateinit var charactersAdapter: CharactersAdapter
 
@@ -24,11 +30,11 @@ class CharactersFragment : Fragment(), CharactersView {
     ): View? = inflater.inflate(R.layout.fragment_character_list, container, false)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        list.layoutManager = LinearLayoutManager(context)
-        charactersAdapter = CharactersAdapter()
-        list.adapter = charactersAdapter
+        bindScope(getOrCreateScope(SCOPE_FRAGMENT))
 
-        charactersPresenter.charactersView = this
+        list.layoutManager = LinearLayoutManager(context)
+        charactersAdapter = CharactersAdapter { charactersPresenter.onCharacterClick(it) }
+        list.adapter = charactersAdapter
     }
 
     override fun setCharacters(characters: PagedList<Character>) {
@@ -38,6 +44,16 @@ class CharactersFragment : Fragment(), CharactersView {
     override fun setLoading(isLoading: Boolean) {
         list.setVisible(!isLoading)
         progressbar.setVisible(isLoading)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        charactersPresenter.charactersView = this
+    }
+
+    override fun onPause() {
+        super.onPause()
+        charactersPresenter.charactersView = null
     }
 
     companion object {

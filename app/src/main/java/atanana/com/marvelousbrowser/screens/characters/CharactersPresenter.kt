@@ -2,15 +2,19 @@ package atanana.com.marvelousbrowser.screens.characters
 
 import android.arch.paging.PagedList
 import atanana.com.marvelousbrowser.data.dto.Character
+import atanana.com.marvelousbrowser.screens.MarvelousRouter
 import atanana.com.marvelousbrowser.utils.MarvelousExecutors
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
-class CharactersPresenter(private val charactersDataSource: CharactersDataSource) {
+class CharactersPresenter(private val charactersDataSource: CharactersDataSource, private val router: MarvelousRouter) {
+    private lateinit var scopeJob: Job
+
     private val pageConfig = PagedList.Config.Builder()
         .setPageSize(20)
-        .setEnablePlaceholders(false)
+        .setEnablePlaceholders(true)
         .build()
 
     private val pagedList by lazy {
@@ -23,14 +27,25 @@ class CharactersPresenter(private val charactersDataSource: CharactersDataSource
     var charactersView: CharactersView? = null
         set(value) {
             field = value
-            value?.setCharacters(pagedList)
+            if (value != null) {
+                value.setCharacters(pagedList)
+                scopeJob = Job()
+                watchLoading()
+            } else {
+                scopeJob.cancel()
+            }
         }
 
-    init {
-        GlobalScope.launch(Dispatchers.Main) {
+
+    private fun watchLoading() {
+        GlobalScope.launch(Dispatchers.Main + scopeJob) {
             for (isLoading in charactersDataSource.loadingState) {
                 charactersView?.setLoading(isLoading)
             }
         }
+    }
+
+    fun onCharacterClick(character: Character) {
+        router.openCharacterDetails(character.id)
     }
 }

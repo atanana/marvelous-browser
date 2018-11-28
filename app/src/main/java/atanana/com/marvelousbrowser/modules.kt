@@ -2,7 +2,10 @@ package atanana.com.marvelousbrowser
 
 import android.arch.persistence.room.Room
 import android.content.Context
+import android.support.v4.app.FragmentManager
+import atanana.com.marvelousbrowser.data.MarvelousPreferences
 import atanana.com.marvelousbrowser.data.room.MarvelousDatabase
+import atanana.com.marvelousbrowser.screens.MarvelousRouter
 import atanana.com.marvelousbrowser.screens.characters.CharactersDataSource
 import atanana.com.marvelousbrowser.screens.characters.CharactersPresenter
 import atanana.com.marvelousbrowser.web.MarvelAuthInterceptor
@@ -16,14 +19,18 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
+const val SCOPE_FRAGMENT = "scope_fragment"
+
 val mainModule = module {
     single { buildRetrofit() }
     single { get<Retrofit>().create(MarvelService::class.java) }
     single { buildMoshi() }
     single { buildDatabase(get()) }
+    single { MarvelousPreferences(get()) }
+    factory { (fragmentManager: FragmentManager) -> MarvelousRouter(fragmentManager) }
 
-    single { CharactersPresenter(get()) }
-    single { CharactersDataSource(get(), get(), get()) }
+    scope(SCOPE_FRAGMENT) { (router: MarvelousRouter) -> CharactersPresenter(get(), router) }
+    scope(SCOPE_FRAGMENT) { CharactersDataSource(get(), get(), get(), get()) }
 }
 
 private fun buildRetrofit(): Retrofit {
