@@ -3,6 +3,7 @@ package atanana.com.marvelousbrowser
 import android.arch.persistence.room.Room
 import android.content.Context
 import android.support.v4.app.FragmentManager
+import android.transition.TransitionInflater
 import atanana.com.marvelousbrowser.data.MarvelousPreferences
 import atanana.com.marvelousbrowser.data.room.MarvelousDatabase
 import atanana.com.marvelousbrowser.screens.MarvelousRouter
@@ -27,7 +28,8 @@ val mainModule = module {
     single { buildMoshi() }
     single { buildDatabase(get()) }
     single { MarvelousPreferences(get()) }
-    factory { (fragmentManager: FragmentManager) -> MarvelousRouter(fragmentManager) }
+    factory { (fragmentManager: FragmentManager) -> MarvelousRouter(fragmentManager, get()) }
+    single { TransitionInflater.from(get()) }
 
     scope(SCOPE_FRAGMENT) { (router: MarvelousRouter) -> CharactersPresenter(get(), router) }
     scope(SCOPE_FRAGMENT) { CharactersDataSource(get(), get(), get(), get()) }

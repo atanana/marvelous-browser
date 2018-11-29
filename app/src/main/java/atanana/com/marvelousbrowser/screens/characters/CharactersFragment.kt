@@ -33,7 +33,9 @@ class CharactersFragment : Fragment(), CharactersView {
         bindScope(getOrCreateScope(SCOPE_FRAGMENT))
 
         list.layoutManager = LinearLayoutManager(context)
-        charactersAdapter = CharactersAdapter { charactersPresenter.onCharacterClick(it) }
+        charactersAdapter = CharactersAdapter { character, imageView ->
+            charactersPresenter.onCharacterClick(character, imageView)
+        }
         list.adapter = charactersAdapter
     }
 

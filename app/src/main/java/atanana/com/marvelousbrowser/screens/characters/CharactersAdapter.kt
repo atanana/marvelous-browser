@@ -7,17 +7,18 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import atanana.com.marvelousbrowser.R
 import atanana.com.marvelousbrowser.data.dto.Character
 import atanana.com.marvelousbrowser.utils.load
 import kotlinx.android.synthetic.main.item_character.view.*
 
-class CharactersAdapter(private val onItemClick: (Character) -> Unit) :
+class CharactersAdapter(private val onItemClick: (Character, ImageView) -> Unit) :
     PagedListAdapter<Character, CharactersAdapter.ViewHolder>(DIFF_CALLBACK) {
     private val onClickListener = View.OnClickListener {
         val item = it.tag as? Character
         if (item != null) {
-            onItemClick(item)
+            onItemClick(item, it.character_image)
         }
     }
 
@@ -48,6 +49,7 @@ class CharactersAdapter(private val onItemClick: (Character) -> Unit) :
         fun bind(character: Character) {
             name.text = character.name
             image.load(character.thumbnailUrl)
+            image.transitionName = character.id.toString()
         }
 
         fun clear() {

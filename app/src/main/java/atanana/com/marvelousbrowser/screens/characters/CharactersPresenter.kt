@@ -1,6 +1,7 @@
 package atanana.com.marvelousbrowser.screens.characters
 
 import android.arch.paging.PagedList
+import android.widget.ImageView
 import atanana.com.marvelousbrowser.data.dto.Character
 import atanana.com.marvelousbrowser.screens.MarvelousRouter
 import atanana.com.marvelousbrowser.utils.MarvelousExecutors
@@ -45,7 +46,7 @@ class CharactersPresenter(private val charactersDataSource: CharactersDataSource
         }
     }
 
-    fun onCharacterClick(character: Character) {
-        router.openCharacterDetails(character.id)
+    fun onCharacterClick(character: Character, imageView: ImageView) {
+        router.openCharacterDetails(character, imageView)
     }
 }
