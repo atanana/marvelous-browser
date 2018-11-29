@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:clipToPadding="false"
         android:paddingBottom="@dimen/default_margin"
-        android:visibility="gone"
         app:layoutManager="LinearLayoutManager"
         tools:listitem="@layout/item_character" />
 
@@ -24,5 +23,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:indeterminate="true" />
+        android:indeterminate="true"
+        android:visibility="gone" />
 </FrameLayout>
